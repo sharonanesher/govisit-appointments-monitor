@@ -38,8 +38,8 @@ async def check_appointments():
         try:
             print(f"[{datetime.now().strftime('%H:%M:%S')}] מתחבר ל-GoVisit...")
             await page.goto(GOVISIT_URL, timeout=60000)
-        await page.wait_for_load_state('networkidle', timeout=90000)            await asyncio.sleep(3)
-            
+        await page.wait_for_load_state('networkidle', timeout=90000)
+                await asyncio.sleep(3)
             for branch_name in BRANCHES_TO_CHECK:
                 try:
                     branch_element = page.locator(f'text="{branch_name}"').first
