@@ -40,36 +40,36 @@ async def check_appointments():
             await page.goto(GOVISIT_URL, timeout=60000)
         await page.wait_for_load_state('networkidle', timeout=90000)
                 await asyncio.sleep(3)
-            for branch_name in BRANCHES_TO_CHECK:
-                try:
-                    branch_element = page.locator(f'text="{branch_name}"').first
-                    
-                    if await branch_element.count() > 0:
-                        radio_parent = branch_element.locator('xpath=ancestor::div[contains(@role, "radio")]').first
-                        is_disabled = await radio_parent.get_attribute('aria-disabled')
-                        
-                        if is_disabled == 'false':
-                            print(f"✓ נמצאו תורים פנויים ב-{branch_name}!")
-                            date_element = radio_parent.locator('text=/התור הפנוי הקרוב/')
-                            if await date_element.count() > 0:
-                                date_text = await date_element.inner_text()
-                            else:
-                                date_text = "תאריך לא זמין"
-                            
-                            available_branches.append({
-                                'name': branch_name,
-                                'date_info': date_text,
-                                'status': 'available'
-                            })
-                        else:
-                            print(f"✗ אין תורים פנויים ב-{branch_name}")
-                            unavailable_branches.append({
-                                'name': branch_name,
-                                'status': 'unavailable'
-                            })
-                    else:
-                        print(f"⚠ לא נמצאה לשכה בשם {branch_name}")
-                        errors.append(f"לא נמצאה לשכה: {branch_name}")
+                for branch_name in BRANCHES_TO_CHECK:
+                    try:
+                                    branch_element = page.locator(f'text="{branch_name}"').first
+                                    
+                                    if await branch_element.count() > 0:
+                                        radio_parent = branch_element.locator('xpath=ancestor::div[contains(@role, "radio")]').first
+                                        is_disabled = await radio_parent.get_attribute('aria-disabled')
+                                        
+                                        if is_disabled == 'false':
+                                            print(f"✓ נמצאו תורים פנויים ב-{branch_name}!")
+                                            date_element = radio_parent.locator('text=/התור הפנוי הקרוב/')
+                                            if await date_element.count() > 0:
+                                                date_text = await date_element.inner_text()
+                                            else:
+                                                date_text = "תאריך לא זמין"
+                                            
+                                            available_branches.append({
+                                                'name': branch_name,
+                                                'date_info': date_text,
+                                                'status': 'available'
+                                            })
+                                        else:
+                                            print(f"✗ אין תורים פנויים ב-{branch_name}")
+                                            unavailable_branches.append({
+                                                'name': branch_name,
+                                                'status': 'unavailable'
+                                            })
+                                    else:
+                            print(f"⚠ לא נמצאה לשכה בשם {branch_name}")
+                            errors.append(f"לא נמצאה לשכה: {branch_name}")
                         
                 except Exception as e:
                     print(f"❌ שגיאה בבדיקת {branch_name}: {str(e)}")
